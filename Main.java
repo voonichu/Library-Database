@@ -3,16 +3,6 @@ package com.CSCI300;
 import java.sql.*;
 import java.util.Scanner;
 
-/* MySQL table creation query
-CREATE TABLE library.Users (
-	user_id int AUTO_INCREMENT,
-    username char(255),
-    password char(255),
-    admin bool,
-    PRIMARY KEY (user_id)
-);
-*/
-
 public class Main {
 
     public static void main(String[] args) {
