@@ -56,10 +56,56 @@ public class Borrowers {
     }
 
     public static void addBorrower() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter borrower id: ");
+        int borrowerID = input.nextInt();
+        System.out.println("Enter name of borrower: ");
+        input.nextLine();
+        String borrowerName = input.nextLine();
+        System.out.println("Enter major of borrower: ");
+        String major = input.nextLine();
+        System.out.println("Enter date of return: ");
+        String returnDate = input.nextLine();
 
+        try {
+            Connection connection = Database.connection;
+            String query = "INSERT INTO borrowers VALUES (?, ?, ?, ?)";
+            PreparedStatement stm = connection.prepareStatement(query);
+
+            stm.setInt(1, borrowerID);
+            stm.setString(2, borrowerName);
+            stm.setString(3, major);
+            stm.setString(4, returnDate);
+            stm.executeUpdate();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public static void getBorrower() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter borrower id: ");
+        int borrowerId = input.nextInt();
+
+        try {
+            Connection connection = Database.connection;
+            String query = "SELECT * FROM borrowers WHERE borrower_id = '" + borrowerId + "'";
+            PreparedStatement stm = connection.prepareStatement(query);
+            ResultSet result = stm.executeQuery(query);
+            while (result.next()) {
+                String borrowerName = result.getString("borrower_name");
+                String major = result.getString("major");
+                String returnDate = result.getString("return_date");
+
+                System.out.println("Borrower name: " + borrowerName);
+                System.out.println("Major: " + major);
+                System.out.println("Return Date: " + returnDate);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
     }
 

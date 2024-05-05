@@ -94,7 +94,7 @@ public class Authors {
                 System.out.println("Publisher ID: " + result.getInt("publisher_id"));
                 System.out.println("Author Name: " + result.getString("author_name"));
                 System.out.println("Genre: " + result.getString("genre"));
-                System.out.println("\n");
+                System.out.println();
             }
         } catch (Exception e) {
             System.out.println(e);

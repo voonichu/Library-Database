@@ -25,6 +25,7 @@ public class Books {
                 System.out.println("2. View");
                 System.out.println("3. Delete");
                 System.out.println("4. Update");
+                System.out.println("5. View Available Books");
                 System.out.println("0. Exit");
                 System.out.println("Enter what you want to do to the table:");
                 choice = input.nextInt();
@@ -42,6 +43,9 @@ public class Books {
                     case 4:
                         updateBooks();
                         break;
+                    case 5:
+                        getBorrowedBooks();
+                        break;
                     case 0:
                         System.out.println("Exiting...");
                         break;
@@ -51,7 +55,25 @@ public class Books {
 
             } while (choice != 0);
         } else {
-            getBooks();
+            do {
+                System.out.println("1. View all");
+                System.out.println("2. View all available");
+                System.out.println("0. Exit");
+                choice = input.nextInt();
+
+                switch (choice) {
+                    case 1:
+                        getBooks();
+                        break;
+                    case 2:
+                        getBorrowedBooks();
+                        break;
+                    case 0:
+                        System.out.println("Exiting...");
+                    default:
+                        System.out.println("Invalid choice. Please try again");
+                }
+            } while (choice != 0);
         }
     }
     public static void addBooks() {
@@ -101,7 +123,7 @@ public class Books {
                 System.out.println("Genre: " + result.getString("genre"));
                 System.out.println("Publisher ID: " + result.getInt("publisher_id"));
                 System.out.println("Book Type: " + result.getString("book_type"));
-                System.out.println("\n");
+                System.out.println();
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -239,4 +261,46 @@ public class Books {
         }
     }
 
+    public static void getBorrowedBooks() {
+        try {
+            Connection connection = Database.connection; // Connect to database
+            String query = "SELECT Count(*) FROM availability WHERE availability_status = 'yes'";
+            Statement stm = connection.createStatement(); // Create statement
+            ResultSet result = stm.executeQuery(query); // Execute the query
+            int numAvailable = 0;
+            while (result.next()) {
+                numAvailable = result.getInt("COUNT(*)");
+            }
+
+            int[] book_id_array = new int[numAvailable];
+
+            query = "SELECT * FROM availability WHERE availability_status = 'yes'"; // Enter the query
+            stm = connection.createStatement();
+            result = stm.executeQuery(query);
+            int i = 0;
+            while(result.next()) {
+                book_id_array[i] = result.getInt("book_id");
+                i++;
+            }
+            for (i = 0; i < numAvailable; i++) {
+                query = "SELECT * FROM books WHERE book_id = '" + book_id_array[i] + "'";
+                stm = connection.createStatement();
+                result = stm.executeQuery(query);
+
+                while (result.next()) {
+                    System.out.println("Book ID: " + result.getInt("book_id"));
+                    System.out.println("Book Name: " + result.getString("book_title"));
+                    System.out.println("Author ID: " + result.getString("author_id"));
+                    System.out.println("Genre: " + result.getString("genre"));
+                    System.out.println("Publisher ID: " + result.getInt("publisher_id"));
+                    System.out.println("Book Type: " + result.getString("book_type"));
+                }
+            }
+
+
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 }

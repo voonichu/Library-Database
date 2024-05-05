@@ -3,6 +3,7 @@ package com.CSCI300;
 import java.sql.*;
 import java.util.Scanner;
 
+
 public class Main {
 
     public static void main(String[] args) {
@@ -134,19 +135,19 @@ public class Main {
                         adminStatus = result.getBoolean("admin");
                     }
                 }
-            decryptedPassword = EncryptDecrypt.decrypt(decryptedPassword);
+            decryptedPassword = EncryptDecrypt.decrypt(decryptedPassword); // Decrypts the password before checking if it equals the password the user entered
             if (decryptedPassword.equals(loginpassword)) {
-                passwordMatch = true;
+                passwordMatch = true; // Sets boolean to true to indicate that the passwords match and that the login was successful
             }
 
             if (usernameMatch && passwordMatch) {
-                System.out.println("Login Successful");
-                System.out.println(adminStatus);
+                System.out.println("Login Successful"); // Prints that the login was successful if both the username and passwords match
+                loggedIn(adminStatus); // Calls the loggedIn function and passes the boolean variable adminStatus to indicate whether the user is an admin or not
             } else {
-                System.out.println("Incorrect username or password");
+                System.out.println("Incorrect username or password"); // Otherwise prints that it was an incorrect username or password
             }
 
-           loggedIn(adminStatus);
+
 
         } catch (Exception e) {
             System.out.println(e);
@@ -187,7 +188,7 @@ public class Main {
                 }
             }
 
-            if (!invalidUser) {
+            if (!invalidUser) { // Adds the new username and password into the database if the username is not invalid
                 query = "INSERT INTO Users VALUES (?, ?, ?, ?)";
                 stm = connection.prepareStatement(query);
                 stm.setInt(1, 0);

@@ -58,11 +58,54 @@ public class Availability {
 
 
     public static void addAvailability() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter availability ID: ");
+        int availabilityID = input.nextInt();
+        System.out.println("Enter borrower ID: ");
+        int borrowerid = input.nextInt();
+        System.out.println("Enter availability of book (yes/no): ");
+        input.nextLine();
+        String availability = input.nextLine();
+        System.out.println("Enter book ID: ");
+        int bookid = input.nextInt();
+
+        try {
+            Connection connection = Database.connection;
+            String query = "INSERT INTO availability VALUES (?, ?, ?, ?)";
+            PreparedStatement stm = connection.prepareStatement(query);
+
+            stm.setInt(1, availabilityID);
+            stm.setInt(2, borrowerid);
+            stm.setString(3, availability);
+            stm.setInt(4, bookid);
+            stm.executeUpdate();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
     }
 
-    public static void getAvailability() {
 
+    public static void getAvailability() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter book ID: ");
+        int bookID = input.nextInt();
+
+        try {
+            Connection connection = Database.connection;
+            String query = "SELECT availability_status FROM availability WHERE book_id = '" + bookID + "'";
+            PreparedStatement stm = connection.prepareStatement(query);
+            ResultSet result = stm.executeQuery(query);
+
+            while (result.next()) {
+                String availability = result.getString("availability_status");
+                System.out.println("Available: " + availability);
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public static void delAvailability() {
@@ -70,7 +113,22 @@ public class Availability {
     }
 
     public static void updateAvailability() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter ID of book you wish to update: ");
+        String bookID = input.nextLine();
+        System.out.println("Enter availability status: ");
+        String availabilityStatus = input.nextLine();
 
+        try {
+            Connection connection = Database.connection;
+            String query = "UPDATE availability SET availability_status = ? WHERE book_id = ?";
+            PreparedStatement stm = connection.prepareStatement(query);
+            stm.setString(1, availabilityStatus);
+            stm.setString (2, bookID);
+            stm.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
 }
